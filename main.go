@@ -45,6 +45,7 @@ type User struct {
 
 type Token struct {
   AccessToken string `json:"access_token"`
+  User map[string]interface{}
 }
 
 type Servers struct {
@@ -273,6 +274,11 @@ func Authenticate(res http.ResponseWriter, req *http.Request) {
     tokenString, err := token.SignedString(hmacSampleSecret)
     userToken := Token{}
     userToken.AccessToken = tokenString
+    userToken.User = map[string]interface{}{
+    	"id": user.Id,
+    	"email": user.Email,
+    	"username": user.Username,
+	}
 
     authJson, err := json.Marshal(userToken)
     if err != nil {
